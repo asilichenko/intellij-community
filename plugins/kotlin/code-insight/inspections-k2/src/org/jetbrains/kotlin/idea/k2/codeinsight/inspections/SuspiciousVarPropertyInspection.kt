@@ -26,18 +26,20 @@ internal class SuspiciousVarPropertyInspection : KotlinApplicableInspectionBase<
         return ApplicabilityRange.single(element) { it.valOrVarKeyword }
     }
 
-    override fun InspectionManager.createProblemDescriptor(
+    override fun InspectionManager.createProblemDescriptors(
         element: KtProperty,
         context: Unit,
         rangeInElement: TextRange?,
         onTheFly: Boolean
-    ): ProblemDescriptor = createProblemDescriptor(
-        element,
-        rangeInElement,
-        KotlinBundle.message("suspicious.var.property.its.setter.does.not.influence.its.getter.result"),
-        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-        onTheFly,
-        LocalQuickFix.from(ChangeVariableMutabilityFix(element, makeVar = false, deleteInitializer = true))!!
+    ): List<ProblemDescriptor> = listOf(
+        createProblemDescriptor(
+            element,
+            rangeInElement,
+            KotlinBundle.message("suspicious.var.property.its.setter.does.not.influence.its.getter.result"),
+            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+            onTheFly,
+            LocalQuickFix.from(ChangeVariableMutabilityFix(element, makeVar = false, deleteInitializer = true))!!
+        )
     )
 
     override fun isApplicableByPsi(element: KtProperty): Boolean {
